@@ -7,7 +7,7 @@ import hashlib
 import io
 import re
 from google.oauth2.service_account import Credentials
-from weasyprint import HTML
+HTML = None
 import math
 
 # ==========================================
@@ -1661,7 +1661,7 @@ else:
                         """
                             
                             try:
-                                from weasyprint import HTML
+                                HTML = None
                                 with st.spinner("⏳ جاري إعداد شهادة التفوق بصيغة PDF..."):
                                     pdf_bytes = HTML(string=certificate_html).write_pdf()
                                     
