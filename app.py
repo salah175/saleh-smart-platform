@@ -7,11 +7,6 @@ import hashlib
 import io
 import re
 from google.oauth2.service_account import Credentials
-try:`n    try:
-    from weasyprint import HTML
-except Exception:
-    HTML = None
-`nexcept Exception:`n    HTML = None
 import math
 
 # ==========================================
@@ -40,7 +35,6 @@ def get_gspread_client():
     try:
         creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"])
         return gspread.authorize(creds).open_by_key(st.secrets["SHEET_ID"])
-    except Exception as e: 
         st.error(f"âڑ ï¸ڈ ط®ط·ط£ ط§طھطµط§ظ„ ط¨ط³ظٹط±ظپط± ط¬ظˆط¬ظ„: {e}")
         return None
 
@@ -86,7 +80,6 @@ def fetch_safe(worksheet_name):
         df = pd.DataFrame(data[1:], columns=data[0])
         if not df.empty: df.iloc[:, 0] = df.iloc[:, 0].astype(str).str.strip()
         return df
-    except Exception:
         st.cache_resource.clear()
         st.toast("âڑ ï¸ڈ طھظ… طھط­ط¯ظٹط« ط§ظ„ط§طھطµط§ظ„ ظ…ط¹ ط§ظ„ط³ظٹط±ظپط±طŒ ط­ط§ظˆظ„ ظ…ط¬ط¯ط¯ط§ظ‹.", icon="ًں”„")
         return pd.DataFrame()
@@ -99,7 +92,6 @@ def safe_append_row(worksheet_name, data_dict):
         row = [data_dict.get(h, "") for h in headers]
         ws.append_row(row)
         return True
-    except Exception:
         st.cache_resource.clear()
         st.error("âڑ ï¸ڈ ط­ط¯ط« ط§ظ†ظ‚ط·ط§ط¹طŒ طھظ… ط§ظ„طھط­ط¯ظٹط«. ظٹط±ط¬ظ‰ ط§ظ„ط¶ط؛ط· ظ…ط±ط© ط£ط®ط±ظ‰.")
         return False
@@ -325,7 +317,6 @@ else:
                 st.session_state.df_grades = fetch_safe("grades")
                 st.session_state.df_behavior = fetch_safe("behavior")
                 st.session_state.db_loaded = True
-            except Exception as e:
                 st.error(f"â‌Œ ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ط§ظ„ط§طھطµط§ظ„: {e}")
                 st.stop()
                 
@@ -551,7 +542,6 @@ else:
                                             if 'db_loaded' in st.session_state: del st.session_state['db_loaded']
                                             st.cache_data.clear()
                                             st.rerun()
-                                        except Exception as e:
                                             st.error(f"â‌Œ ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ط§ظ„طھط¹ط¯ظٹظ„: {e}")
                             else:
                                 st.info("ظ„ط§ طھظˆط¬ط¯ ط¨ظٹط§ظ†ط§طھ ظ„ظ„ط·ظ„ط§ط¨ ط¨ط¹ط¯.")
@@ -976,7 +966,6 @@ else:
                                                         new_val = current_points + chg
                                                         ws.update_cell(c.row, idx, new_val)
                                                         st.session_state.df_students.loc[student_idx, 'ط§ظ„ظ†ظ‚ط§ط·'] = int(new_val)
-                                            except Exception as e: st.error(f"ط®ط·ط£: {e}")
                                         
                                         st.toast(f"âœ… طھظ… ط¥ط¶ط§ظپط© ط§ظ„ظ…ظ„ط§ط­ط¸ط© ظ„ظ„ط·ط§ظ„ط¨ {s_nm} ظˆطھط­ط¯ظٹط« ط±طµظٹط¯ظ‡!", icon="ًںژ‰")
                             else: st.info("ًں’، ظˆط¶ط¹ ط§ظ„ظ‚ط±ط§ط،ط© ظپظ‚ط·.")
@@ -1134,7 +1123,6 @@ else:
                                                 if 'db_loaded' in st.session_state: del st.session_state['db_loaded']
                                                 st.cache_data.clear()
                                                 st.rerun()
-                                        except Exception as e:
                                             st.error(f"â‌Œ ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ط§ظ„ط­ظپط¸: {e}")
                                     else:
                                         st.warning("âڑ ï¸ڈ ظ„ظ… طھظ‚ظ… ط¨ط§ط®طھظٹط§ط± ط£ظٹ ط³ظ„ظˆظƒ ظ„ط£ظٹ ط·ط§ظ„ط¨ ظ„ظٹطھظ… ط­ظپط¸ظ‡.")
@@ -1150,7 +1138,6 @@ else:
                 try: 
                     sh.worksheet("exams").delete_rows(int(row_index) + 2)
                     st.cache_data.clear(); st.toast("âœ… طھظ… ط­ط°ظپ ط§ظ„طھظ†ط¨ظٹظ‡ ط¨ظ†ط¬ط§ط­")
-                except Exception as e: st.toast(f"â‌Œ ط­ط¯ط« ط®ط·ط£: {e}")
 
             if st.session_state.role == "teacher":
                 with st.form("ann_add"):
@@ -1207,7 +1194,6 @@ else:
                                 st.success("âœ… طھظ… طھطµظپظٹط± ط¬ظ…ظٹط¹ ط§ظ„ظ†ظ‚ط§ط·")
                                 if 'db_loaded' in st.session_state: del st.session_state['db_loaded']
                                 st.cache_data.clear(); st.rerun()
-                        except Exception as e: st.error(f"ط®ط·ط£: {e}")
 
                     if st.button("ًں§® ط¥ط¹ط§ط¯ط© ط§ط­طھط³ط§ط¨ ط§ظ„ظ†ظ‚ط§ط· ظ…ظ† ط§ظ„ط³ط¬ظ„ (طھطµط­ظٹط­ ط´ط§ظ…ظ„)", type="primary", use_container_width=True):
                         try:
@@ -1232,7 +1218,6 @@ else:
                                     if 'db_loaded' in st.session_state: del st.session_state['db_loaded']
                                     st.cache_data.clear(); st.rerun()
                                 else: st.error("ظ„ظ… ظٹطھظ… ط§ظ„ط¹ط«ظˆط± ط¹ظ„ظ‰ ط¹ظ…ظˆط¯ 'ط§ظ„ظ†ظ‚ط§ط·'")
-                        except Exception as e: st.error(f"ط­ط¯ط« ط®ط·ط£: {e}")
 
                 st.divider()
                 st.markdown("##### ًں“¥ طھظ†ط²ظٹظ„ ظ†ط³ط®ط© ظƒط§ظ…ظ„ط© ظ…ظ† ط§ظ„ط¨ظٹط§ظ†ط§طھ (Backup)")
@@ -1298,7 +1283,6 @@ else:
                                     st.info("ًں’، ط¬ظ…ظٹط¹ ط§ظ„ط¨ظٹط§ظ†ط§طھ ظ…ظˆط¬ظˆط¯ط© ظ…ط³ط¨ظ‚ط§ظ‹طŒ ظ„ظ… ظٹطھظ… ط¥ط¶ط§ظپط© ط¬ط¯ظٹط¯.")
                                 if 'db_loaded' in st.session_state: del st.session_state['db_loaded']
                                 st.cache_data.clear(); st.rerun()
-                        except Exception as e: st.error(f"ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ط§ظ„ظ…ط²ط§ظ…ظ†ط©: {e}")
                 
                     st.divider(); c1, c2 = st.columns(2)
                     b1 = io.BytesIO(); pd.DataFrame(columns=["id", "name", "class", "year", "sem", "ط§ظ„ط¬ظˆط§ظ„", "ط§ظ„ط¥ظٹظ…ظٹظ„", "ط§ظ„ظ†ظ‚ط§ط·"]).to_excel(b1, index=False)
@@ -1665,11 +1649,6 @@ else:
                         """
                             
                             try:
-                                try:`n    try:
-    from weasyprint import HTML
-except Exception:
-    HTML = None
-`nexcept Exception:`n    HTML = None
                                 with st.spinner("âڈ³ ط¬ط§ط±ظٹ ط¥ط¹ط¯ط§ط¯ ط´ظ‡ط§ط¯ط© ط§ظ„طھظپظˆظ‚ ط¨طµظٹط؛ط© PDF..."):
                                     pdf_bytes = HTML(string=certificate_html).write_pdf()
                                     
@@ -1681,7 +1660,6 @@ except Exception:
                                         type="primary",
                                         use_container_width=True
                                     )
-                            except Exception as e:
                                 st.error(f"âڑ ï¸ڈ ظپط´ظ„ طھظˆظ„ظٹط¯ ط§ظ„ظ€ PDF ط¨ط³ط¨ط¨: {e}")
                                 st.info("ًں’، ظ…ظ„ط§ط­ط¸ط©: طھظ… طھظپط¹ظٹظ„ طھط­ظ…ظٹظ„ ظ†ط³ط®ط© ط§ظ„ظˆظٹط¨ ظ„ط³ط±ط¹ط© ط§ظ„ظˆطµظˆظ„.")
                                 st.download_button(
@@ -1716,7 +1694,6 @@ except Exception:
                                 if 'ط§ظ„ط¥ظٹظ…ظٹظ„' in h and 'ط§ظ„ط¬ظˆط§ظ„' in h:
                                     ws.update_cell(c.row, h.index('ط§ظ„ط¥ظٹظ…ظٹظ„')+1, nm); ws.update_cell(c.row, h.index('ط§ظ„ط¬ظˆط§ظ„')+1, fp); st.success("âœ… طھظ… ط§ظ„طھط­ط¯ظٹط«")
                                 else: st.error("ط®ط·ط£ ظ‡ظٹظƒظ„ظٹ")
-                        except Exception as e: st.error(f"ط®ط·ط£: {e}")
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 if st.button("ًںڑھ طھط³ط¬ظٹظ„ ط§ظ„ط®ط±ظˆط¬", type="secondary", use_container_width=True): 
