@@ -7,7 +7,11 @@ import hashlib
 import io
 import re
 from google.oauth2.service_account import Credentials
-try:`n    from weasyprint import HTML`nexcept Exception:`n    HTML = None
+try:`n    try:
+    from weasyprint import HTML
+except Exception:
+    HTML = None
+`nexcept Exception:`n    HTML = None
 import math
 
 # ==========================================
@@ -1661,7 +1665,11 @@ else:
                         """
                             
                             try:
-                                try:`n    from weasyprint import HTML`nexcept Exception:`n    HTML = None
+                                try:`n    try:
+    from weasyprint import HTML
+except Exception:
+    HTML = None
+`nexcept Exception:`n    HTML = None
                                 with st.spinner("âڈ³ ط¬ط§ط±ظٹ ط¥ط¹ط¯ط§ط¯ ط´ظ‡ط§ط¯ط© ط§ظ„طھظپظˆظ‚ ط¨طµظٹط؛ط© PDF..."):
                                     pdf_bytes = HTML(string=certificate_html).write_pdf()
                                     
